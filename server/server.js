@@ -1,5 +1,9 @@
 const express = require('express');
 const http = require('http');
+const { json } = require('stream/consumers');
+const playerSchema = require('../src/app/schemas/Player');
+const Room =require('../src/app/schemas/Player');
+
 const io = require('socket.io')(3001,{
   cors: {
     origin: ["http://localhost:4200/"],
@@ -51,8 +55,10 @@ io.on('connection', (socket) => {
 	  socket.join(room);
   	  io.emit('rooms', getRooms('new room'));
   });
-  socket.on('join room', function(room){
-	  console.log(`A new user joined room ${room}`);
+  socket.on('join room', function(code){
+    room =code;
+	  console.log(`A new user joined room with the code ${code}`);
+    //i changed room to code because we are sending codes
 	  socket.room = room;
 	  socket.join(room);
   	  io.emit('rooms', getRooms('joined room'));
@@ -75,8 +81,36 @@ io.on('connection', (socket) => {
 
   socket.on('gamecode_opponent', function(text1){
     console.log('gamecode_opponent is: ', text1);
+  });
+
+  socket.on('createSession', async (roomId,code1, code2 )=> {
+    console.log('createsession with id: '+roomId+' with codes: ', code1, code2);
+    //creating room
+    let room  = Room;
+    //init room //we need players array,turn
+    let player = {
+      socketID: socket.id,
+      code1: code1,
+      code2: code2,
+      plyerType: 'X', //to see who created the room
+    }
+    // player stored in the room
+
+    //room.players.push(player); 
+    //room.turn = player;
+    const roomIdNew = room._id;
+    console.log("roomIdNow is this: ", roomIdNew)
+    //api call to save in MongoDB
+    //await room.save(); 
+    socket.join(roomIdNew);
+    io.to(roomIdNew).emit("createRoomSuccess", room);
+  });
+
+  socket.on('charecter selection', (name)=> {
+    console.log('the name is:', name);
   })
 });
+
 
 
 
