@@ -1,9 +1,11 @@
-const express = require('express');
+//import {express }from 'express';
+//import {http } from 'http';
+//import { SocketioService} from './../src/app/socketioService';
 const http = require('http');
 const { json } = require('stream/consumers');
 const playerSchema = require('../src/app/schemas/Player');
 const Room =require('../src/app/schemas/Player');
-
+//const  SocketioService= require('C:/Users/abtuer/setup/AR-Battlezone/AR-Battlezone-Angular/src/app/socketioService.ts');
 const io = require('socket.io')(3001,{
   cors: {
     origin: ["http://localhost:4200/"],
@@ -18,13 +20,21 @@ const io = require('socket.io')(3001,{
 io.on('connection', (socket) => {
   console.log('New user connected: ', socket.id);
 
-  socket.on('isMoving', (x,y) => {
+  socket.on('isMoving', (x,y,z) => {
     console.log("this is the x: ",x, " and this is y: ",y);
+    //webxr call
   });
 
-  socket.on('joinRoom', (RoomId)=> {
-    console.log('in server on joinRoom:', RoomId);
-    socket.join(RoomId);
+  socket.on('normalAttack',(atk, aim) =>{
+     //webxr
+  })
+
+  socket.om('hit',(player, life) =>{
+    //player life --
+  });
+
+  socket.on('game-over',(result)=> {
+    //end game
   })
 
   socket.on('sendMessage', (message, room) => {
@@ -44,25 +54,18 @@ io.on('connection', (socket) => {
 
 
   //new code
-  console.log('a user connected ');
   io.emit('rooms', getRooms('connected'));
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
+
   socket.on('new room', function(room){
 	  console.log(`A new room is created ${room}`);
 	  socket.room = room;
 	  socket.join(room);
-  	  io.emit('rooms', getRooms('new room'));
+  	io.emit('rooms', getRooms('new room'));
   });
-  socket.on('join room', function(code){
-    room =code;
-	  console.log(`A new user joined room with the code ${code}`);
-    //i changed room to code because we are sending codes
-	  socket.room = room;
-	  socket.join(room);
-  	  io.emit('rooms', getRooms('joined room'));
-  });
+
   socket.on('chat message', function(data){
     io.in(data.room).emit('chat message', `${data.name}: ${data.msg}` );
   });
@@ -71,20 +74,33 @@ io.on('connection', (socket) => {
 	  socket.username = name; 
   });
 
-  socket.on('connect', function(){
-    console.log('connected to the server');
-  } );
 
-  socket.on('gamecode', function(text1){
-    console.log('gamecode is: ', text1);
-  })
+  socket.on('notify-session-created',(msg)=>{
+    console.log(msg);
+  });
+  
+  socket.on('join room', (code)=>{
+    room =code;
+	  console.log(`A new user joined room with the code ${code}`);
+    //i changed room to code because we are sending codes
+    
+	  socket.join(code);
+    socket.to(code).emit("we here","we joined session");//sendet  nicht?
+    socket.emit("somebodyJoined", "there is a room now with this code: ", code);
+  	//io.emit('rooms', getRooms('joined room'));
+  });
 
-  socket.on('gamecode_opponent', function(text1){
-    console.log('gamecode_opponent is: ', text1);
+  socket.on('somebodyJoined', (msg,code)=>{
+    console.log(msg,code)
   });
 
   socket.on('createSession', async (roomId,code1, code2 )=> {
+    //SocketioService.roomCreated(code1,code2);
     console.log('createsession with id: '+roomId+' with codes: ', code1, code2);
+    socket.emit("session created", code1,code2);
+    socket.join(code2);
+    socket.to(code2).emit("we here","we created session");//sendet  nicht?
+    /*
     //creating room
     let room  = Room;
     //init room //we need players array,turn
@@ -104,13 +120,22 @@ io.on('connection', (socket) => {
     //await room.save(); 
     socket.join(roomIdNew);
     io.to(roomIdNew).emit("createRoomSuccess", room);
+    */
   });
 
+  socket.on('we here',(msg)=> {
+    console.log(msg);
+  });
+
+  socket.on('roomCreated',(msg, code1,code2)=>{
+    console.log(msg,code1,code2);
+  })
+
   socket.on('charecter selection', (name)=> {
+    socket.to(code2).emit('name',name);
     console.log('the name is:', name);
   })
 });
-
 
 
 

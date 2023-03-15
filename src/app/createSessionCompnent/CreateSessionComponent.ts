@@ -24,8 +24,7 @@ export class CreateSessionComponent implements OnInit{
     }
 
     createSession(){
-      console.log("create session");
+      console.log("create session", this.socket.id);
       this.socket.emit('createSession',this.socket.id, this.code1, this.code2);
-      
     }
 }

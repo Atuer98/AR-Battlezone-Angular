@@ -25,6 +25,9 @@ export class JoinGameComponent implements OnInit{
     }
 
     joinGame(){
-      this.socket.emit('join room',this.code);
+      console.log("joinging room with code: ",this.code)
+      //this.socket.emit('join room',this.code);
+      //await this.socket.join(this.code);
+      this.socket.emit("somebodyJoined","we joined with code: ", this.code);
     }
 }

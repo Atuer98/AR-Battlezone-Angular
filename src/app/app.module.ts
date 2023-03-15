@@ -10,6 +10,7 @@ import { JoinGameComponent } from './joinGameComponent/joinGameComponent';
 import { HighScoreComponent } from './highScoreComponent/highScoreComponent';
 import { ArenaSelectionComponent } from './arenaSelectionComponent/ArenaSelectionComponent';
 import { CharacterSelectionComponent } from './CharacterSelectionComponent/CharacterSelectionComponent';
+import { SocketioService } from './socketioService';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { CharacterSelectionComponent } from './CharacterSelectionComponent/Chara
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [SocketioService],
   bootstrap: [AppComponent]
 })
 export class AppModule { 
