@@ -6,9 +6,12 @@ import { Subject } from 'rxjs';
 })
 export class SharedDataService {
   private apiResponse: any;
+  private jCode:any;
   private apiResponseSource = new Subject<any>();
+  private joinerCodeSource = new Subject<any>();
 
   apiResponse$ = this.apiResponseSource.asObservable();
+  joinerCode$ = this.joinerCodeSource.asObservable();
 
   setApiResponse(data: any) {
     console.log("shared dated service setted data: ", data);
@@ -20,7 +23,12 @@ export class SharedDataService {
     console.log("shared dated service returns data.");
     return this.apiResponse;
   }
-  damn(){
-    console.log("damn");
+  setJoinerCode(data:any){
+    console.log("set joinercode: ",data);
+    this.jCode=data;
+    this.joinerCodeSource.next(this.jCode);
+  }
+  getJoinerCode(){
+    return this.jCode;
   }
 }

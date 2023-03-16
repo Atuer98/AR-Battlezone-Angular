@@ -19,10 +19,12 @@ export class IndexComponent implements OnInit{
   ngOnInit():void{
       console.log("we are in index ngoninit");        
       //this.socket.emit('index',"we eating good in da index comp");
-      this.socket.on('api-response', (data:any) => {
+      this.socket.on('api-response', (data:any, code:any) => {
         console.log('this is api response:', data);
         this.apiResponse = data;
         this.sharedDataService.setApiResponse(data);
+        console.log("done with apirespond and starting with set join", code);
+        this.sharedDataService.setJoinerCode(code);
       });
   }
   onNewGame(){

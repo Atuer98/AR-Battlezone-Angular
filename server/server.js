@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
     console.log('the name is:', name);
   })
 
-
+                          // the parameters to init the players object
   socket.on('init',async (a,b,c,d,e,f,g,h,i,l,m,n,o,p,q,r,s,t,w,v)=> {
     console.log("we emitting", a,v);
     const result = await axios({
@@ -126,9 +126,9 @@ io.on('connection', (socket) => {
       }
     });
     console.log("thie result is: ", result.data);
-    socket.emit('api-response', result.data);
-    secodCode = getCode(result.data);
-    sendCode2(socket,secodCode);
+    secodCode = await getCode(result.data);
+    socket.emit('api-response', result.data, secodCode);
+    //socket.emit('joiner', secodCode);
     //code ans frontend schicken
   })
 });

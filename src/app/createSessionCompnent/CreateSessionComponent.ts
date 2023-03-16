@@ -22,7 +22,6 @@ export class CreateSessionComponent implements OnInit{
   }
 
   ngOnInit():void{
-      console.log("we are in createSession ngoninit");        
       //this.socket.emit('inCreate',"we arrived in createsession component");
       this.sharedDataService.apiResponse$.subscribe(data => {
         // Update the component's property with the received data
