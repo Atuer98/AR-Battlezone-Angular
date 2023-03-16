@@ -20,11 +20,11 @@ import { io } from "socket.io-client";
         this.socket.on("session created",(code1: any,code2: any)=> {
           console.log("a session was cereated with the codes: ",code1,code2);
         });
-        //this.active1();
       }
     
 
-    submitCharecter(){
-      this.socket.emit('charecter selection', this.name);
+    submitCharecter(event: Event){
+      console.log(event);
+      this.socket.emit('charecter selection', event);
     }
   }

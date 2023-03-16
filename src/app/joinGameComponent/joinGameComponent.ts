@@ -12,31 +12,30 @@ export class JoinGameComponent implements OnInit{
   @Input() code :string;
   apiResponse :any;
 
-
   constructor(private sharedDataService: SharedDataService){
       console.log("we are in JoinGame");
       this.socket = io('http://localhost:3001');
       this.code="";
-      this.sharedDataService.joinerCode$.subscribe(data => {
-        // Update the component's property with the received data
-        this.apiResponse = data;
-        console.log("shared dated service returned in JoinGame", data);
-      });
+      
   }
 
   ngOnInit():void{
       this.socket.on('api-response', (data:any) => {
           console.log("this the code: ", data)
       }); 
-      /* 
-      this.socket.on('secoundcode', (code:any)=> {
-        console.log("this is joined code", code);
-        this.code=code;
-        this.apiResponse=code;
-      })  
-      */  
-      
+      this.sharedDataService.joinerCode$.subscribe(data => {
+        // Update the component's property with the received data
+        this.apiResponse = data;
+        console.log("shared dated service returned in JoinGame", data);
+      });
+      console.log("fetching in joinG");
+      //this.apiResponse =this.fetchCode();
 
+    }
+    fetchCode(){
+      let result =this.sharedDataService.getJoinerCode();
+      console.log("this is fetchdoe:", result);
+      return result;
     }
 
     joinGame(){

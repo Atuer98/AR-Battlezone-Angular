@@ -3,7 +3,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-body{
-    min-width: 100%;
-    min-height: 100%;
-}
+
+body {
+    min-height: 100vh;
+  }

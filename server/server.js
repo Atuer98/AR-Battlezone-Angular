@@ -111,8 +111,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('charecter selection', (name)=> {
-    socket.to(code2).emit('name',name);
     console.log('the name is:', name);
+    //api call update name
   })
 
                           // the parameters to init the players object

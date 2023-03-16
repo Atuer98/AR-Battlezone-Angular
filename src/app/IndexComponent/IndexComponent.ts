@@ -22,7 +22,7 @@ export class IndexComponent implements OnInit{
       this.socket.on('api-response', (data:any, code:any) => {
         console.log('this is api response:', data);
         this.apiResponse = data;
-        this.sharedDataService.setApiResponse(data);
+        this.sharedDataService.setApiResponse(data, code);
         console.log("done with apirespond and starting with set join", code);
         this.sharedDataService.setJoinerCode(code);
       });

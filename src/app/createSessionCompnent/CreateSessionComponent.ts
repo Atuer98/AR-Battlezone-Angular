@@ -11,6 +11,8 @@ import { SharedDataService } from "../sharedDataService";
 export class CreateSessionComponent implements OnInit{
   socket :any;
   apiResponse: any;
+  apiResponse2:any;
+
   @Input() code1 :string;
   @Input() code2 : string;
   userObj:any;
@@ -28,6 +30,9 @@ export class CreateSessionComponent implements OnInit{
         this.apiResponse = data;
         console.log("shared dated service returned in create game", data);
       });
+      this.sharedDataService.joinerCode$.subscribe(code => {
+        this.apiResponse2 =code;
+      })
       
     }
 
