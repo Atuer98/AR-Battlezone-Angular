@@ -11,6 +11,7 @@ import { HighScoreComponent } from './highScoreComponent/highScoreComponent';
 import { ArenaSelectionComponent } from './arenaSelectionComponent/ArenaSelectionComponent';
 import { CharacterSelectionComponent } from './CharacterSelectionComponent/CharacterSelectionComponent';
 import { SocketioService } from './socketioService';
+import { SharedDataService } from './sharedDataService';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SocketioService } from './socketioService';
     HttpClientModule,
     FormsModule
   ],
-  providers: [SocketioService],
+  exports: [],
+  providers: [SocketioService,SharedDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

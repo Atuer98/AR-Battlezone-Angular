@@ -22,9 +22,7 @@ import { io } from "socket.io-client";
         });
         //this.active1();
       }
-    active1(){
-      this.socket.emit('notify-session-created',"this session is now created and waits for someone to join");
-    }
+    
 
     submitCharecter(){
       this.socket.emit('charecter selection', this.name);

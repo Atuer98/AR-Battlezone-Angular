@@ -1,6 +1,7 @@
-//import {express }from 'express';
-//import {http } from 'http';
-//import { SocketioService} from './../src/app/socketioService';
+//ng = require('@angular/core');
+
+const axios = require('axios');
+
 const http = require('http');
 const { json } = require('stream/consumers');
 const playerSchema = require('../src/app/schemas/Player');
@@ -12,9 +13,8 @@ const io = require('socket.io')(3001,{
   },
 });
 
-//const app = express();
-//const server = http.createServer(app);
-//const io = socketIO(server);
+let firstCode="";
+let secodCode="";
 
 //previews code
 io.on('connection', (socket) => {
@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
      //webxr
   })
 
-  socket.om('hit',(player, life) =>{
+  socket.on('hit',(player, life) =>{
     //player life --
   });
 
@@ -50,8 +50,6 @@ io.on('connection', (socket) => {
   socket.on('doubleClick', (x,y)=>{
     console.log("this is the x: ",x, " and this is y: ",y);
   });
-
-
 
   //new code
   io.emit('rooms', getRooms('connected'));
@@ -88,6 +86,7 @@ io.on('connection', (socket) => {
     socket.to(code).emit("we here","we joined session");//sendet  nicht?
     socket.emit("somebodyJoined", "there is a room now with this code: ", code);
   	//io.emit('rooms', getRooms('joined room'));
+    //api
   });
 
   socket.on('somebodyJoined', (msg,code)=>{
@@ -100,27 +99,7 @@ io.on('connection', (socket) => {
     socket.emit("session created", code1,code2);
     socket.join(code2);
     socket.to(code2).emit("we here","we created session");//sendet  nicht?
-    /*
-    //creating room
-    let room  = Room;
-    //init room //we need players array,turn
-    let player = {
-      socketID: socket.id,
-      code1: code1,
-      code2: code2,
-      plyerType: 'X', //to see who created the room
-    }
-    // player stored in the room
 
-    //room.players.push(player); 
-    //room.turn = player;
-    const roomIdNew = room._id;
-    console.log("roomIdNow is this: ", roomIdNew)
-    //api call to save in MongoDB
-    //await room.save(); 
-    socket.join(roomIdNew);
-    io.to(roomIdNew).emit("createRoomSuccess", room);
-    */
   });
 
   socket.on('we here',(msg)=> {
@@ -135,7 +114,42 @@ io.on('connection', (socket) => {
     socket.to(code2).emit('name',name);
     console.log('the name is:', name);
   })
+
+
+  socket.on('init',async (a,b,c,d,e,f,g,h,i,l,m,n,o,p,q,r,s,t,w,v)=> {
+    console.log("we emitting", a,v);
+    const result = await axios({
+      method :'post',
+      url:'http://193.56.133.47:8088/database/api/sessions',
+      data : {
+        a,b,c,d,e,f,g,h,i,l,m,n,o,p,q,r,s,t,w,v
+      }
+    });
+    console.log("thie result is: ", result.data);
+    socket.emit('api-response', result.data);
+    secodCode = getCode(result.data);
+    sendCode2(socket,secodCode);
+    //code ans frontend schicken
+  })
 });
+
+async function sendCode2(socket,code){
+  //window.postMessage({ type: 'code', data: code }, '*');
+
+}
+
+async function getCode(data){
+
+  const result = await axios({
+    method :'get',
+    url:'http://193.56.133.47:8088/database/api/sessions/'+data,
+    data : {
+    }
+  });
+
+  console.log("this is the 2. code", result.data.player2code);
+  return result.data.player2code;
+}
 
 
 
